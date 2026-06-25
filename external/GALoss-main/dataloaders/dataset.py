@@ -3,6 +3,7 @@ import numpy as np
 from torch.utils.data import Dataset
 import nibabel as nib
 import itertools
+import os
 from scipy import ndimage
 import random
 from torch.utils.data.sampler import Sampler
@@ -128,8 +129,8 @@ class AMOS(Dataset):
         self.laebls = []
         for i in range(len(self.image_list)):
             image_name = self.image_list[i] 
-            image_path = self._base_dir + '{}_image.npy'.format(image_name)
-            label_path = self._base_dir + '{}_label.npy'.format(image_name)
+            image_path = os.path.join(self._base_dir, '{}_image.npy'.format(image_name))
+            label_path = os.path.join(self._base_dir, '{}_label.npy'.format(image_name))
             image = np.load(image_path)
             label = np.load(label_path)
             image = image.clip(min=-125, max=275)
@@ -166,8 +167,8 @@ class AMOS_fast(Dataset):
         self.laebls_l = []
         for i in range(len(self.labeled_list)):
             image_name = self.labeled_list[i] 
-            image_path = self._base_dir + '{}_image.npy'.format(image_name)
-            label_path = self._base_dir + '{}_label.npy'.format(image_name)
+            image_path = os.path.join(self._base_dir, '{}_image.npy'.format(image_name))
+            label_path = os.path.join(self._base_dir, '{}_label.npy'.format(image_name))
             image = np.load(image_path)
             label = np.load(label_path)
             image = image.clip(min=-125, max=275)
@@ -180,8 +181,8 @@ class AMOS_fast(Dataset):
         self.laebls_u = []
         for i in range(len(self.unlabeled_list)):
             image_name = self.unlabeled_list[i] 
-            image_path = self._base_dir + '{}_image.npy'.format(image_name)
-            label_path = self._base_dir + '{}_label.npy'.format(image_name)
+            image_path = os.path.join(self._base_dir, '{}_image.npy'.format(image_name))
+            label_path = os.path.join(self._base_dir, '{}_label.npy'.format(image_name))
             image = np.load(image_path)
             label = np.load(label_path)
             image = image.clip(min=-125, max=275)

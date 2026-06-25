@@ -11,7 +11,7 @@ SAVE_PATH="${SAVE_PATH:-$PROJECT_DIR/model}"
 GA_ROOT="${GA_ROOT:-$PROJECT_DIR/external/GALoss-main}"
 MAX_ITER="${MAX_ITER:-17000}"
 
-"$PYTHON_BIN" train_Synapse_CPS_PGHSC.py \
+"$PYTHON_BIN" train_Synapse_CPS_V3_3D.py \
   --dataset_name Synapse \
   --root_path "$ROOT_PATH" \
   --save_path "$SAVE_PATH" \
@@ -25,4 +25,4 @@ MAX_ITER="${MAX_ITER:-17000}"
   --seed 1337 \
   --cube_size 32 \
   --consistency_rampup 200.0 \
-  --pghsc_enable 0
+  --aux_enable 0

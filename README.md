@@ -61,19 +61,32 @@ Synapse:
 
 ```text
 data/Synapse/
-  train_npz/
-  test_vol_h5/
-  lists/
+  0001.h5
+  0002.h5
+  ...
+  0040.h5
 ```
+
+Each Synapse `.h5` file is expected to contain `image` and `label` datasets.
+The default 20 percent split is hard-coded in `train_Synapse_CPS_V3_3D.py`:
+`labelnum=4` uses cases `0002`, `0023`, `0034`, and `0039` as labeled data.
+Evaluation defaults to test cases `0004`, `0007`, `0010`, `0033`, `0035`, and
+`0036`.
 
 AMOS:
 
 ```text
 data/AMOS/
-  train_npz/
-  test_vol_h5/
+  amos_0001_image.npy
+  amos_0001_label.npy
+  ...
 data/amos_splits/
-  train.txt
+  labeled_2p.txt
+  unlabeled_2p.txt
+  labeled_5p.txt
+  unlabeled_5p.txt
+  labeled_10p.txt
+  unlabeled_10p.txt
   test.txt
 ```
 
@@ -85,6 +98,9 @@ override paths with environment variables:
 export ROOT_PATH=/path/to/Synapse
 export SPLIT_DIR=/path/to/amos_splits
 ```
+
+For AMOS training, `labelnum=4`, `10`, and `20` map to the 2 percent, 5
+percent, and 10 percent labeled split files respectively.
 
 ## Training
 
@@ -100,6 +116,18 @@ AMOS full PGH-SC:
 bash run_ga_cps_3d_v3_full_amos.sh
 ```
 
+Synapse baseline without PGH-SC:
+
+```bash
+bash run_ga_cps_3d_baseline_syn20.sh
+```
+
+AMOS baseline without PGH-SC:
+
+```bash
+bash run_ga_cps_3d_baseline_amos.sh
+```
+
 Ablation launchers are provided for:
 
 - `baseline`
@@ -110,6 +138,18 @@ Ablation launchers are provided for:
 
 Training outputs are written to `model/` and logs to `log/` by default. These
 directories are intentionally ignored by git.
+
+All training launchers start from scratch by default. To resume training, set
+checkpoint paths explicitly:
+
+```bash
+RESUME_A=/path/to/best_A.pth \
+RESUME_B=/path/to/best_B.pth \
+RESUME_AUX=/path/to/best_AUX.pth \
+START_ITER=12500 \
+BEST_DICE=0.668946 \
+bash run_ga_cps_3d_v3_full_syn20.sh
+```
 
 ## Evaluation
 
@@ -122,6 +162,17 @@ bash test_best_amos_full.sh
 
 For Synapse, use `test_best_3d_metrics.py` directly or adapt the launcher
 arguments to the checkpoint name you want to evaluate.
+
+Example:
+
+```bash
+python test_best_3d_metrics.py \
+  --ga_root external/GALoss-main \
+  --root_path data/Synapse \
+  --run_dir model/Synapse_CPS_syn20_v3full_3d_GA_4labeled_seed_1337 \
+  --ckpt_a /path/to/best_A.pth \
+  --ckpt_b /path/to/best_B.pth
+```
 
 ## Notes For Reproduction
 

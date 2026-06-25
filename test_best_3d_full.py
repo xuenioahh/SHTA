@@ -1,3 +1,4 @@
+import argparse
 import os
 import random
 import sys
@@ -7,16 +8,27 @@ import torch
 import torch.backends.cudnn as cudnn
 
 
-PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-GA_ROOT = os.environ.get("GA_ROOT", os.path.join(PROJECT_DIR, "external", "GALoss-main"))
-ROOT_PATH = os.environ.get("ROOT_PATH", os.path.join(PROJECT_DIR, "data", "Synapse"))
-RUN_EXP = os.environ.get("RUN_EXP", "CPS_syn20_v3full_3d")
-RUN_DIR = os.environ.get("RUN_DIR", os.path.join(PROJECT_DIR, "model", f"Synapse_{RUN_EXP}_GA_4labeled_seed_1337"))
-CKPT_A = os.path.join(RUN_DIR, "iter_12500_dice_0.668946_best_A.pth")
-CKPT_B = os.path.join(RUN_DIR, "iter_12500_dice_0.668946_best_B.pth")
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ga_root", type=str, default=os.environ.get("GA_ROOT", os.path.join(os.path.dirname(os.path.abspath(__file__)), "external", "GALoss-main")))
+    parser.add_argument("--root_path", type=str, default=os.environ.get("ROOT_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "Synapse")))
+    parser.add_argument("--run_dir", type=str, default=os.environ.get("RUN_DIR", ""))
+    parser.add_argument("--ckpt_a", type=str, default=os.environ.get("CKPT_A", ""))
+    parser.add_argument("--ckpt_b", type=str, default=os.environ.get("CKPT_B", ""))
+    parser.add_argument("--test_list", type=str, default="0004,0007,0010,0033,0035,0036")
+    parser.add_argument("--patch_size", type=int, nargs=3, default=[96, 96, 96])
+    parser.add_argument("--stride_xy", type=int, default=32)
+    parser.add_argument("--stride_z", type=int, default=16)
+    parser.add_argument("--num_classes", type=int, default=14)
+    parser.add_argument("--seed", type=int, default=1337)
+    return parser.parse_args()
 
-if GA_ROOT not in sys.path:
-    sys.path.insert(0, GA_ROOT)
+
+args = parse_args()
+
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+if args.ga_root not in sys.path:
+    sys.path.insert(0, args.ga_root)
 
 from networks.vnet import VNet
 from utils import test_util_vnet_AB
@@ -56,6 +68,9 @@ class FeatureVNet(VNet):
 
 
 def main():
+    if not args.ckpt_a or not args.ckpt_b:
+        raise ValueError("Set --ckpt_a and --ckpt_b, or provide CKPT_A and CKPT_B in the environment.")
+
     seed = 1337
     cudnn.benchmark = False
     cudnn.deterministic = True
@@ -64,33 +79,31 @@ def main():
     random.seed(seed)
     np.random.seed(seed)
 
-    num_classes = 14
-    patch_size = (96, 96, 96)
-    test_list = ["0004", "0007", "0010", "0033", "0035", "0036"]
+    test_list = [x.strip() for x in args.test_list.split(",") if x.strip()]
 
-    model_a = FeatureVNet(n_channels=1, n_classes=num_classes).cuda()
-    model_b = FeatureVNet(n_channels=1, n_classes=num_classes).cuda()
-    model_a.load_state_dict(torch.load(CKPT_A, map_location="cpu"))
-    model_b.load_state_dict(torch.load(CKPT_B, map_location="cpu"))
+    model_a = FeatureVNet(n_channels=1, n_classes=args.num_classes).cuda()
+    model_b = FeatureVNet(n_channels=1, n_classes=args.num_classes).cuda()
+    model_a.load_state_dict(torch.load(args.ckpt_a, map_location="cpu"))
+    model_b.load_state_dict(torch.load(args.ckpt_b, map_location="cpu"))
     model_a.eval()
     model_b.eval()
 
     avg_dice, std_dice, all_metric = test_util_vnet_AB.validation_all_case(
         model_a,
         model_b,
-        num_classes=num_classes,
-        base_dir=ROOT_PATH,
+        num_classes=args.num_classes,
+        base_dir=args.root_path,
         image_list=test_list,
-        patch_size=patch_size,
-        stride_xy=32,
-        stride_z=16,
+        patch_size=tuple(args.patch_size),
+        stride_xy=args.stride_xy,
+        stride_z=args.stride_z,
     )
 
     mean_dice = float(np.mean(all_metric[:, 0, :]))
     mean_asd = float(np.mean(all_metric[:, 3, :]))
 
-    print(f"CKPT_A={CKPT_A}")
-    print(f"CKPT_B={CKPT_B}")
+    print(f"CKPT_A={args.ckpt_a}")
+    print(f"CKPT_B={args.ckpt_b}")
     print(f"mean_dice={mean_dice}")
     print(f"mean_asd={mean_asd}")
     print("per_class_dice=" + ",".join(f"{x:.6f}" for x in avg_dice))

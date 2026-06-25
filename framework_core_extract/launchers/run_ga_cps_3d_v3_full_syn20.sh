@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$PROJECT_DIR"
 
 PYTHON_BIN="${GALOSS_PYTHON:-python}"
@@ -10,13 +10,12 @@ ROOT_PATH="${ROOT_PATH:-$PROJECT_DIR/data/Synapse}"
 SAVE_PATH="${SAVE_PATH:-$PROJECT_DIR/model}"
 GA_ROOT="${GA_ROOT:-$PROJECT_DIR/external/GALoss-main}"
 MAX_ITER="${MAX_ITER:-17000}"
-RUN_DIR="${SAVE_PATH}/Synapse_${RUN_EXP}_GA_4labeled_seed_1337"
-RESUME_A="${RESUME_A:-$RUN_DIR/iter_12500_dice_0.668946_best_A.pth}"
-RESUME_B="${RESUME_B:-$RUN_DIR/iter_12500_dice_0.668946_best_B.pth}"
-RESUME_AUX="${RESUME_AUX:-$RUN_DIR/iter_12500_dice_0.668946_best_AUX.pth}"
-START_ITER="${START_ITER:-12500}"
-BEST_DICE="${BEST_DICE:-0.668946}"
-LOG_APPEND="${LOG_APPEND:-1}"
+RESUME_A="${RESUME_A:-}"
+RESUME_B="${RESUME_B:-}"
+RESUME_AUX="${RESUME_AUX:-}"
+START_ITER="${START_ITER:-0}"
+BEST_DICE="${BEST_DICE:-0.0}"
+LOG_APPEND="${LOG_APPEND:-0}"
 
 "$PYTHON_BIN" train_Synapse_CPS_V3_3D.py \
   --dataset_name Synapse \
