@@ -1,9 +1,8 @@
 # PGH-SC 3D Core Files
 
-This directory provides a compact view of the PGH-SC 3D training core and the
-launcher settings used for Synapse and AMOS experiments.
+Compact core view for Synapse and AMOS.
 
-## Structure
+## Contents
 
 - `core_train/`
   - `train_Synapse_CPS_V3_3D.py`
@@ -22,39 +21,28 @@ launcher settings used for Synapse and AMOS experiments.
 - `notes/`
   - `FRAMEWORK_BREAKDOWN.md`
 
-## Included Components
+## What It Contains
 
-- Training entry points that connect the GA-CPS-style host, token conversion,
-  PGH-SC auxiliary module, and loss aggregation.
-- `EPRL_latestv2.py`, which implements the proxy-anchor, hard-token, and
-  center-consistency components.
-- Launchers for baseline, full PGH-SC, proxy-only, hard-only, and center-only
-  variants.
+- training entry points
+- PGH-SC auxiliary module
+- launcher variants
+- implementation notes
 
-## Excluded Components
-
-The following generated artifacts are intentionally excluded from version
-control:
+## Excluded
 
 - checkpoints under `model/`
 - logs under `log/`
 - prediction volumes
 - rendered figures and exported analysis files
 
-## Host Dependency Boundary
-
-The top-level release vendors the minimal GA-CPS host under
-`external/GALoss-main/`. These core files can also be used with an external host
-checkout by setting `GA_ROOT`.
-
-Training entry points import:
+## Dependency
 
 - `GALoss`
 - `dataloaders.dataset`
 - `networks.vnet`
 - `utils`
 
-## Suggested Reading Order
+## Read
 
 1. `notes/FRAMEWORK_BREAKDOWN.md`
 2. `core_train/train_Synapse_CPS_V3_3D.py`

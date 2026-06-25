@@ -1,6 +1,6 @@
 # AMOS Baseline And PGH-SC Training
 
-This note summarizes the AMOS entry points and expected data layout.
+AMOS training and evaluation quick note.
 
 ## Files
 
@@ -11,22 +11,11 @@ This note summarizes the AMOS entry points and expected data layout.
 - `test_best_amos_baseline.sh`
 - `test_best_amos_full.sh`
 
-## Required Paths
+## Paths
 
-Set `ROOT_PATH` to the AMOS numpy root. The directory is expected to contain
-paired image and label arrays:
-
-```text
-amos_xxxx_image.npy
-amos_xxxx_label.npy
-```
-
-Set `SPLIT_DIR` to the AMOS split directory. By default, launchers use:
-
-```text
-data/AMOS
-data/amos_splits
-```
+- `ROOT_PATH`: AMOS numpy root with `amos_xxxx_image.npy` and
+  `amos_xxxx_label.npy`
+- `SPLIT_DIR`: split text files in `data/amos_splits`
 
 ## Split Convention
 
@@ -34,32 +23,27 @@ data/amos_splits
 - `labelnum=10`: 5 percent labeled split
 - `labelnum=20`: 10 percent labeled split
 
-Evaluation uses `test_amos_vnet_AB.py` and interpolates volumes to
-`160 x 160 x 80` before metric computation.
+Evaluation uses `test_amos_vnet_AB.py` and `160 x 160 x 80` interpolation.
 
-## Baseline Training
+## Train
 
 ```bash
-cd /path/to/PGH-SC-3D
 ROOT_PATH=/your/AMOS_numpy_root \
 SPLIT_DIR=/your/amos_splits \
 LABELNUM=10 \
 bash run_ga_cps_3d_baseline_amos.sh
 ```
 
-## Full PGH-SC Training
-
 ```bash
-cd /path/to/PGH-SC-3D
 ROOT_PATH=/your/AMOS_numpy_root \
 SPLIT_DIR=/your/amos_splits \
 LABELNUM=10 \
 bash run_ga_cps_3d_v3_full_amos.sh
 ```
 
-## Evaluation
+## Eval
 
-After training, evaluate a checkpoint pair with:
+Direct:
 
 ```bash
 python test_best_amos_3d_metrics.py \
@@ -72,20 +56,14 @@ python test_best_amos_3d_metrics.py \
   --summary_txt /path/to/test_summary.txt
 ```
 
-Convenience launchers are also provided:
+Launchers:
 
 ```bash
-cd /path/to/PGH-SC-3D
 bash test_best_amos_baseline.sh
-```
-
-```bash
-cd /path/to/PGH-SC-3D
 bash test_best_amos_full.sh
 ```
 
-By default, these scripts search the selected `RUN_DIR` for the latest
-`*_best_A.pth` and `*_best_B.pth`, then write metrics to:
+Outputs:
 
 ```text
 $RUN_DIR/test_summary.txt
