@@ -131,19 +131,19 @@ arguments to the checkpoint name you want to evaluate.
   VNet crops.
 - `framework_core_extract/notes/HOST_DEPENDENCY_BOUNDARY.md` records which
   parts are PGH-SC and which parts come from the GA-CPS host.
-- `framework_core_extract/notes/PGSAM_STYLE_RELEASE_CHECKLIST.md` records the
-  open-source packaging checklist used to prepare this folder.
+- `framework_core_extract/notes/` provides implementation notes for the
+  training framework and host boundary.
 
 ## Citation
 
-If this code is used in a paper, cite the corresponding PGH-SC manuscript once
-it is available. Also cite the original host method or implementation when
-using the GA-CPS-style components.
+If this code is used in a paper, please cite the corresponding PGH-SC
+manuscript and the original host method or implementation when using the
+GA-CPS-style components.
 
 ```bibtex
 @misc{pghsc3d,
   title        = {PGH-SC 3D: Proxy-Guided Hard Semantic Consistency for Semi-supervised 3D Medical Image Segmentation},
-  author       = {Anonymous},
+  author       = {PGH-SC Authors},
   year         = {2026},
   note         = {Code release}
 }
