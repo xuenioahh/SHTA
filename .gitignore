@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pth
+*.nii.gz
+model/
+log/
+runs/
+*.log
+*.npz
+*.npy
+*.h5
+*.hdf5
+*.html
+*.png
+*.jpg
+*.jpeg
+*.pdf
