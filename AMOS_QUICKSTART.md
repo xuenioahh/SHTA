@@ -1,6 +1,6 @@
-# AMOS Baseline And SHTA Training
+# AMOS Quick Start
 
-AMOS training and evaluation quick note.
+Minimal commands for AMOS training and evaluation.
 
 ## Files
 

@@ -1,15 +1,102 @@
 # SHTA
 
-This repository provides the code release for **SHTA: Semantic Hard Token
-Correction and Center Alignment for Semi-Supervised Medical Image
-Segmentation**.
+Code for **SHTA: Semantic Hard Token Correction and Center Alignment for
+Semi-Supervised Medical Image Segmentation**.
 
-SHTA is a training-time semantic representation branch for semi-supervised 3D
-medical image segmentation. It refines intermediate token representations
-through Semantic Assignment, Hard Token Refinement, and Semantic Center
-Alignment while keeping the original inference pathway unchanged.
+SHTA is a training-time semantic branch for semi-supervised 3D medical image
+segmentation. It adds Semantic Assignment, Hard Token Refinement, and Semantic
+Center Alignment during training, and keeps the original inference pathway
+unchanged.
 
-Data, checkpoints, logs, and prediction outputs are not included.
+This repository is source-only. Datasets, checkpoints, logs, predictions, and
+figures are not included.
+
+## Quick Start
+
+Create the environment:
+
+```bash
+conda create -n shta python=3.10
+conda activate shta
+pip install -r requirements.txt
+export GA_ROOT="$(pwd)/external/GALoss-main"
+```
+
+Prepare data:
+
+```text
+Synapse:
+  data/Synapse/0001.h5 ... 0040.h5
+
+AMOS:
+  /path/to/AMOS/amos_xxxx_image.npy
+  /path/to/AMOS/amos_xxxx_label.npy
+  /path/to/amos_splits/*.txt
+```
+
+Train Synapse:
+
+```bash
+ROOT_PATH=/path/to/Synapse \
+bash run_ga_cps_3d_v3_full_syn20.sh
+```
+
+Train AMOS:
+
+```bash
+ROOT_PATH=/path/to/AMOS \
+SPLIT_DIR=/path/to/amos_splits \
+LABELNUM=10 \
+bash run_ga_cps_3d_v3_full_amos.sh
+```
+
+Evaluate Synapse:
+
+```bash
+python test_best_3d_metrics.py \
+  --ga_root external/GALoss-main \
+  --root_path /path/to/Synapse \
+  --run_dir /path/to/run_dir \
+  --ckpt_a /path/to/best_A.pth \
+  --ckpt_b /path/to/best_B.pth
+```
+
+Evaluate AMOS:
+
+```bash
+python test_best_amos_3d_metrics.py \
+  --ga_root external/GALoss-main \
+  --root_path /path/to/AMOS \
+  --split_dir /path/to/amos_splits \
+  --run_dir /path/to/run_dir \
+  --ckpt_a /path/to/best_A.pth \
+  --ckpt_b /path/to/best_B.pth \
+  --summary_txt /path/to/test_summary.txt
+```
+
+## Variants
+
+Use the launchers to reproduce the baseline and SHTA ablations:
+
+```bash
+bash run_ga_cps_3d_baseline_syn20.sh
+bash run_ga_cps_3d_v3_proxyonly_clean_syn20.sh
+bash run_ga_cps_3d_v3_hardonly_clean_syn20.sh
+bash run_ga_cps_3d_v3_centeronly_clean_syn20.sh
+bash run_ga_cps_3d_v3_full_syn20.sh
+```
+
+AMOS launchers follow the same naming pattern:
+
+```bash
+bash run_ga_cps_3d_baseline_amos.sh
+bash run_ga_cps_3d_v3_proxyonly_amos.sh
+bash run_ga_cps_3d_v3_hardonly_amos.sh
+bash run_ga_cps_3d_v3_centeronly_amos.sh
+bash run_ga_cps_3d_v3_full_amos.sh
+```
+
+Outputs are written to `model/` and `log/`.
 
 ## Layout
 
@@ -19,93 +106,18 @@ Data, checkpoints, logs, and prediction outputs are not included.
 - `test_best_3d_metrics.py`: Synapse evaluation
 - `test_best_amos_3d_metrics.py`: AMOS evaluation
 - `run_ga_cps_*.sh`: training launchers
-- `framework_core_extract/`: compact core copy and notes
-- `external/GALoss-main/`: minimal vendored base framework files
-
-## Dependency
-
-```bash
-export GA_ROOT="$(pwd)/external/GALoss-main"
-```
-
-Use a CUDA PyTorch environment:
-
-```bash
-conda create -n shta python=3.10
-conda activate shta
-pip install -r requirements.txt
-```
-
-## Data
-
-Synapse: `data/Synapse/0001.h5 ... 0040.h5`
-
-AMOS: `amos_xxxx_image.npy / amos_xxxx_label.npy` plus `data/amos_splits/*.txt`
-
-```bash
-export ROOT_PATH=/path/to/Synapse
-export SPLIT_DIR=/path/to/amos_splits
-```
-
-## Train
-
-```bash
-bash run_ga_cps_3d_v3_full_syn20.sh
-bash run_ga_cps_3d_v3_full_amos.sh
-bash run_ga_cps_3d_baseline_syn20.sh
-bash run_ga_cps_3d_baseline_amos.sh
-```
-
-Variants:
-
-- `baseline`
-- `proxyonly`
-- `hardonly`
-- `centeronly`
-- `full`
-
-Outputs go to `model/` and `log/`.
-
-Resume by setting checkpoint paths:
-
-```bash
-RESUME_A=/path/to/best_A.pth \
-RESUME_B=/path/to/best_B.pth \
-RESUME_AUX=/path/to/best_AUX.pth \
-START_ITER=12500 \
-BEST_DICE=0.668946 \
-bash run_ga_cps_3d_v3_full_syn20.sh
-```
-
-## Eval
-
-AMOS:
-
-```bash
-bash test_best_amos_full.sh
-```
-
-Synapse:
-
-```bash
-python test_best_3d_metrics.py \
-  --ga_root external/GALoss-main \
-  --root_path data/Synapse \
-  --run_dir model/Synapse_CPS_syn20_v3full_3d_GA_4labeled_seed_1337 \
-  --ckpt_a /path/to/best_A.pth \
-  --ckpt_b /path/to/best_B.pth
-```
+- `AMOS_QUICKSTART.md`: AMOS-specific commands
+- `external/GALoss-main/`: minimal vendored base-framework files
+- `framework_core_extract/`: compact core copy and implementation notes
 
 ## Notes
 
-- Source only.
-- The semantic branch is used during training and removed at inference.
-- `framework_core_extract/notes/HOST_DEPENDENCY_BOUNDARY.md` lists the boundary
-  between SHTA files and the vendored base-framework files.
+- SHTA is used only during training.
+- Testing uses the original segmentation pathway.
+- `framework_core_extract/notes/FRAMEWORK_BREAKDOWN.md` summarizes the module
+  mapping to the paper.
 
 ## Citation
-
-If used, cite the SHTA paper and the base SSL framework.
 
 ```bibtex
 @misc{shta2026,
