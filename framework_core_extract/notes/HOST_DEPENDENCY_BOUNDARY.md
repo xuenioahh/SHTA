@@ -1,6 +1,6 @@
-# 3D PGH-SC Core Extract Host Dependency Boundary
+# SHTA Core Extract Dependency Boundary
 
-This note records what must still come from the external GA-CPS host tree
+This note records what must still come from the GA-CPS-style base-framework tree
 for `framework_core_extract` to run, and what already lives inside the extract.
 
 ## What is already inside this extract
@@ -10,10 +10,10 @@ for `framework_core_extract` to run, and what already lives inside the extract.
 - `core_train/EPRL_latestv2.py`
 - `launchers/*.sh`
 
-These files contain the PGH-SC incremental logic, launcher flags, and the
+These files contain the SHTA incremental logic, launcher flags, and the
 3D token / proxy / hard / center mechanism.
 
-## What must still come from the host
+## What must still come from the base framework
 
 Both training entrypoints insert `--ga_root` into `sys.path` and then import:
 
@@ -22,7 +22,8 @@ Both training entrypoints insert `--ga_root` into `sys.path` and then import:
 - `networks.vnet`
 - `utils`
 
-For the current Synapse/AMOS runs, the host tree must therefore provide at
+For the current Synapse/AMOS runs, the base-framework tree must therefore
+provide at
 least:
 
 - `GALoss.py`
@@ -33,19 +34,19 @@ least:
 
 ## What this means in practice
 
-- The extract is good for reading and patching PGH-SC itself.
+- The extract is good for reading and patching SHTA itself.
 - The extract is not self-contained for training or evaluation.
-- A runnable release must either vendor the above host modules or state a
+- A runnable release must either vendor the above base-framework modules or state a
   hard external dependency on `GA_ROOT`.
 
 ## Minimal release recommendation
 
-If the goal is a PG-SAM-style public package, keep the host dependency but
+If the goal is a PG-SAM-style public package, keep the base-framework dependency but
 document it explicitly:
 
 1. set `GA_ROOT` in the launcher
-2. ship the expected host directory layout
+2. ship the expected base-framework directory layout
 3. note the required imports in the README
 
-If the goal is full portability, copy the minimal host files listed above
+If the goal is full portability, copy the minimal base-framework files listed above
 into this repo and adjust the import paths accordingly.

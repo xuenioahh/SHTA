@@ -1,4 +1,4 @@
-# PGH-SC 3D Core Files
+# SHTA Core Files
 
 Compact core view for Synapse and AMOS.
 
@@ -24,7 +24,7 @@ Compact core view for Synapse and AMOS.
 ## What It Contains
 
 - training entry points
-- PGH-SC auxiliary module
+- SHTA auxiliary semantic branch
 - launcher variants
 - implementation notes
 

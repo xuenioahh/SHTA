@@ -1,7 +1,7 @@
 # Minimal GA-CPS Host Files
 
-This directory vendors the minimal GA-CPS host code required by the PGH-SC
-3D training scripts.
+This directory vendors the minimal GA-CPS-style base-framework code required by
+the SHTA 3D training scripts.
 
 Included files:
 

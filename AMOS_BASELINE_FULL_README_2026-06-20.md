@@ -1,4 +1,4 @@
-# AMOS Baseline And PGH-SC Training
+# AMOS Baseline And SHTA Training
 
 AMOS training and evaluation quick note.
 

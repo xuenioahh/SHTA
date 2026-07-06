@@ -4,10 +4,10 @@ This release is organized as a code-only research package.
 
 Included:
 
-- PGH-SC training entries for Synapse and AMOS.
-- The PGH-SC auxiliary module implementation.
+- SHTA training entries for Synapse and AMOS.
+- The SHTA auxiliary semantic-branch implementation.
 - Launchers for baseline and ablation variants.
-- A minimal vendored GA-CPS-style host under `external/GALoss-main/`.
+- Minimal vendored GA-CPS-style base-framework files under `external/GALoss-main/`.
 - Environment, dataset, training, and evaluation instructions in the top-level
   `README.md`.
 

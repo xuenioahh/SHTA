@@ -562,7 +562,7 @@ def train(labeled_list, unlabeled_list, eval_list, fold_id=1):
             writer.add_scalar("loss/hard_alignment", hard_loss.item(), iter_num)
             writer.add_scalar("loss/center_consistency", center_loss.item(), iter_num)
             for key, value in aux_stats.items():
-                writer.add_scalar(f"pghsc/{key}", value, iter_num)
+                writer.add_scalar(f"shta/{key}", value, iter_num)
 
             if (
                 args.aux_enable

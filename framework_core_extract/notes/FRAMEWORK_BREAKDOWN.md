@@ -1,7 +1,6 @@
-# PGH-SC 3D Framework Breakdown
+# SHTA Framework Breakdown
 
-This note summarizes the implementation structure of the released PGH-SC 3D
-code.
+This note summarizes the implementation structure of the released SHTA code.
 
 Main files:
 
@@ -11,22 +10,25 @@ Main files:
 
 ## Overview
 
-PGH-SC is integrated as a training-time semantic-consistency branch on top of a
-GA-CPS-style two-branch 3D VNet host. It uses token, proxy, hard-token, and
-center-consistency objectives to improve semantic structure during training.
+SHTA is integrated as a training-time semantic branch on top of a GA-CPS-style
+two-branch 3D VNet base framework. It uses token assignment, hard-token
+correction, and center-alignment objectives to improve semantic structure during
+training.
 
-The inference backbone remains the host segmentation network.
+The inference pathway remains the original segmentation network.
 
-## 1. Host Layer
+## 1. Base Framework Layer
 
-The host layer provides the standard semi-supervised segmentation pipeline:
+The base framework layer provides the standard semi-supervised segmentation
+pipeline:
 
 - labeled and unlabeled data loading
 - two-branch 3D VNet prediction
 - supervised segmentation loss
 - cross pseudo supervision loss
 
-The release vendors the minimal host files needed by the training scripts.
+The release vendors the minimal base-framework files needed by the training
+scripts.
 
 ## 2. Feature-To-Token Layer
 
@@ -38,9 +40,9 @@ Token conversion is implemented in the training entry points through:
 - `build_class_tokens_from_token_dist`
 
 This layer maps decoder features and ground-truth masks into token-aligned
-semantic objects used by PGH-SC.
+semantic objects used by SHTA.
 
-## 3. Proxy-Anchor Layer
+## 3. Semantic Assignment Layer
 
 The core semantic branch is implemented by `EPRL` in `EPRL_latestv2.py`.
 
@@ -53,11 +55,11 @@ Main losses:
 - `L_proxy`
 - `L_anchor`
 
-## 4. Hard-Token Layer
+## 4. Hard Token Refinement Layer
 
-The hard-token branch selects uncertain or difficult tokens and applies an
-explicit semantic alignment objective. Selection is controlled by confidence,
-top-ratio, foreground-ratio, and ground-truth purity thresholds.
+The hard-token branch selects foreground hard tokens and applies an explicit
+semantic correction objective. Selection is controlled by confidence, top-ratio,
+foreground-ratio, and ground-truth purity thresholds.
 
 Representative arguments:
 
@@ -71,11 +73,11 @@ Main loss:
 
 - `L_hard`
 
-## 5. Center-Consistency Layer
+## 5. Semantic Center Alignment Layer
 
-The center-consistency branch stabilizes class structure after token-level
-semantic correction by aggregating class centers and regularizing their
-consistency.
+The center-alignment branch stabilizes class structure after token-level
+semantic correction by aggregating class centers and aligning them with
+GT-derived semantic references.
 
 Main loss:
 
@@ -83,14 +85,14 @@ Main loss:
 
 ## 6. Loss Aggregation
 
-Training combines the host losses with weighted PGH-SC auxiliary losses:
+Training combines the base losses with weighted SHTA auxiliary losses:
 
 - `proxy_raw * aux_proxy_weight`
 - `anchor_raw * aux_anchor_weight`
 - `hard_raw * aux_hard_weight`
 - `center_raw * aux_center_weight`
 
-Host losses remain active:
+Base-framework losses remain active:
 
 - `L_sup`
 - `L_cps`
@@ -125,7 +127,7 @@ Baseline:
 
 ## 8. Summary
 
-PGH-SC converts decoder features into token-level semantic objects, organizes
-them through proxy-anchor relations, corrects selected hard tokens, and
-stabilizes class structure with center consistency. These objectives are used
-only during training.
+SHTA converts decoder features into token-level semantic objects, organizes them
+through proxy-based semantic assignment, corrects selected hard tokens, and
+stabilizes class structure with semantic center alignment. These objectives are
+used only during training.
