@@ -1,6 +1,7 @@
 # SHTA Core Files
 
-Compact core view for Synapse and AMOS.
+Compact reading copy for Synapse and AMOS. Use the top-level scripts for
+training and evaluation.
 
 ## Contents
 
@@ -23,7 +24,7 @@ Compact core view for Synapse and AMOS.
 
 ## What It Contains
 
-- training entry points
+- training entry point copies
 - SHTA auxiliary semantic branch
 - launcher variants
 - implementation notes
@@ -41,6 +42,8 @@ Compact core view for Synapse and AMOS.
 - `dataloaders.dataset`
 - `networks.vnet`
 - `utils`
+
+The top-level release vendors these dependencies under `external/GALoss-main`.
 
 ## Read
 

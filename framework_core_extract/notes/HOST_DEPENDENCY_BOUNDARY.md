@@ -1,7 +1,7 @@
 # SHTA Core Extract Dependency Boundary
 
-This note records what must still come from the GA-CPS-style base-framework tree
-for `framework_core_extract` to run, and what already lives inside the extract.
+This note records how the compact `framework_core_extract` copy relates to the
+GA-CPS-style base-framework files shipped by the top-level release.
 
 ## What is already inside this extract
 
@@ -13,7 +13,7 @@ for `framework_core_extract` to run, and what already lives inside the extract.
 These files contain the SHTA incremental logic, launcher flags, and the
 3D token / proxy / hard / center mechanism.
 
-## What must still come from the base framework
+## What comes from the base framework
 
 Both training entrypoints insert `--ga_root` into `sys.path` and then import:
 
@@ -22,9 +22,8 @@ Both training entrypoints insert `--ga_root` into `sys.path` and then import:
 - `networks.vnet`
 - `utils`
 
-For the current Synapse/AMOS runs, the base-framework tree must therefore
-provide at
-least:
+For the current Synapse/AMOS runs, the top-level release vendors these files
+under `external/GALoss-main`:
 
 - `GALoss.py`
 - `dataloaders/`
@@ -35,18 +34,11 @@ least:
 ## What this means in practice
 
 - The extract is good for reading and patching SHTA itself.
-- The extract is not self-contained for training or evaluation.
-- A runnable release must either vendor the above base-framework modules or state a
-  hard external dependency on `GA_ROOT`.
+- For training or evaluation, use the top-level launchers.
+- The top-level launchers set `GA_ROOT` to the vendored base-framework folder by
+  default.
 
 ## Minimal release recommendation
 
-If the goal is a PG-SAM-style public package, keep the base-framework dependency but
-document it explicitly:
-
-1. set `GA_ROOT` in the launcher
-2. ship the expected base-framework directory layout
-3. note the required imports in the README
-
-If the goal is full portability, copy the minimal base-framework files listed above
-into this repo and adjust the import paths accordingly.
+If using a different base-framework checkout, set `GA_ROOT=/path/to/GALoss-main`
+before launching training or evaluation.

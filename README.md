@@ -34,6 +34,25 @@ AMOS:
   /path/to/amos_splits/*.txt
 ```
 
+AMOS split files must include:
+
+```text
+labeled_2p.txt, unlabeled_2p.txt
+labeled_5p.txt, unlabeled_5p.txt
+labeled_10p.txt, unlabeled_10p.txt
+eval.txt, test.txt
+```
+
+Check paths before training:
+
+```bash
+python check_setup.py \
+  --ga_root external/GALoss-main \
+  --synapse_root /path/to/Synapse \
+  --amos_root /path/to/AMOS \
+  --amos_split_dir /path/to/amos_splits
+```
+
 Train Synapse:
 
 ```bash
@@ -105,10 +124,11 @@ Outputs are written to `model/` and `log/`.
 - `train_AMOS_CPS_V3_3D.py`: AMOS training
 - `test_best_3d_metrics.py`: Synapse evaluation
 - `test_best_amos_3d_metrics.py`: AMOS evaluation
+- `check_setup.py`: path and file-name checker
 - `run_ga_cps_*.sh`: training launchers
 - `AMOS_QUICKSTART.md`: AMOS-specific commands
 - `external/GALoss-main/`: minimal vendored base-framework files
-- `framework_core_extract/`: compact core copy and implementation notes
+- `framework_core_extract/`: compact reading copy and implementation notes
 
 ## Notes
 

@@ -2,8 +2,7 @@
 set -euo pipefail
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CORE_DIR="$PROJECT_DIR/framework_core_extract/core_train"
-cd "$CORE_DIR"
+cd "$PROJECT_DIR"
 
 PYTHON_BIN="${GALOSS_PYTHON:-python}"
 RUN_EXP="${RUN_EXP:-CPS_syn20_v3full_3d}"
@@ -18,7 +17,7 @@ START_ITER="${START_ITER:-0}"
 BEST_DICE="${BEST_DICE:-0.0}"
 LOG_APPEND="${LOG_APPEND:-0}"
 
-"$PYTHON_BIN" "$CORE_DIR/train_Synapse_CPS_V3_3D.py" \
+"$PYTHON_BIN" train_Synapse_CPS_V3_3D.py \
   --dataset_name Synapse \
   --root_path "$ROOT_PATH" \
   --save_path "$SAVE_PATH" \
