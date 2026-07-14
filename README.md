@@ -203,6 +203,7 @@ iter_<iter>_dice_<score>_best_AUX.pth  # training branch only
 - `EPRL_latestv2.py` implements the semantic branch.
 - `framework_core_extract/notes/FRAMEWORK_BREAKDOWN.md` gives a compact mapping from the paper components to released code.
 - `docs/ANONYMITY_CHECKLIST.md` lists review-stage anonymity checks.
+- `docs/ANONYMOUS_RELEASE_STRUCTURE.md` lists the anonymous release structure, excluded artifacts, and external execution flow.
 
 ## Citation
 
