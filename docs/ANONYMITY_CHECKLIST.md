@@ -1,15 +1,32 @@
 # Anonymity Checklist
 
-This repository is prepared for anonymous review.
+Use this checklist before distributing the anonymous review link.
 
-- No author names are included in `README.md` or `CITATION.cff`.
-- The citation metadata uses `Anonymous Authors`.
-- The repository URL in citation metadata points to the anonymous 4open link.
-- Datasets, checkpoints, logs, predictions, and local outputs are excluded.
-- Local absolute paths should be passed through environment variables instead of being committed.
-- Personal GitHub URLs should be added only after the review period.
+## Required Checks
 
-Before public release after acceptance, update:
+- `README.md` does not include author names, affiliations, personal emails, or personal GitHub URLs.
+- `CITATION.cff` uses `Anonymous Authors`.
+- Repository links point to the anonymous 4open root URL.
+- Example paths use placeholders such as `/path/to/Synapse` and `/path/to/AMOS`.
+- Launchers accept user paths through environment variables such as `ROOT_PATH`, `SPLIT_DIR`, `SAVE_PATH`, and `GA_ROOT`.
+- The git-tracked file list does not include datasets, checkpoints, logs, predictions, or local outputs.
+- Documentation describes reproducible commands rather than local experiment history.
+
+## Suggested Commands
+
+```bash
+git ls-files
+rg -n "author|affiliation|github.com|/home|Desktop|SCDL|10\\.12" .
+git status --short
+```
+
+Expected result:
+
+- `git ls-files` lists only source code, launchers, documentation, and small method assets.
+- the `rg` command reports only intentional anonymous metadata or checklist text.
+- `git status --short` is empty before upload.
+
+## After Acceptance
 
 - author names in `CITATION.cff`
 - final paper citation

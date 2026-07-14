@@ -74,6 +74,7 @@ Purpose:
 ## Documentation
 
 ```text
+docs/README.md
 docs/ANONYMOUS_RELEASE_STRUCTURE.md
 docs/ANONYMITY_CHECKLIST.md
 docs/REPRODUCE_PAPER_RESULTS.md
@@ -88,6 +89,7 @@ framework_core_extract/README.md
 
 Purpose:
 
+- `README.md`: documentation index and recommended reading order.
 - `ANONYMOUS_RELEASE_STRUCTURE.md`: release structure and scope.
 - `ANONYMITY_CHECKLIST.md`: review-stage anonymity checks.
 - `REPRODUCE_PAPER_RESULTS.md`: paper setting to code mapping.
@@ -146,19 +148,6 @@ machine names or user names
 
 These exclusions keep the repository source-only, anonymous, and portable.
 
-## Review-Stage Metadata
+## Review-Stage Scope
 
-During anonymous review:
-
-- `CITATION.cff` should use `Anonymous Authors`.
-- Repository links should point to the anonymous 4open root URL.
-- README examples should use `/path/to/...` placeholders.
-- Paper result numbers should be reproduced through the listed launchers and evaluation scripts, not through copied local logs.
-
-After acceptance or public release:
-
-- replace anonymous authors with final author names
-- replace the anonymous repository URL with the public GitHub URL
-- add final paper citation metadata
-- add checkpoint download links if weights are released
-- optionally add result logs or prediction artifacts in a separate release asset, not in the source tree
+Review-stage metadata and final pre-upload checks are maintained in `ANONYMITY_CHECKLIST.md`. Paper setting to command mapping is maintained in `REPRODUCE_PAPER_RESULTS.md`.
