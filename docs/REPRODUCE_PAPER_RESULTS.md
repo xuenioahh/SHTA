@@ -123,11 +123,10 @@ Use the matching launcher family for each component setting:
 Evaluation scripts report:
 
 - mean Dice
-- mean HD95
 - mean ASD
-- per-class Dice, HD95, and ASD
+- per-class Dice and ASD
 
-Use `--summary_txt` to write the metrics to a text file for later table construction.
+Use `--summary_txt` to write the metrics to a text file for later table construction. The raw evaluation scripts may include additional compatibility fields; use only the metrics reported in the paper when preparing paper tables.
 
 Expected checkpoint names:
 

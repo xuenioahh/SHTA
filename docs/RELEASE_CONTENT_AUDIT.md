@@ -21,7 +21,7 @@ This file explains why each top-level item is kept in the anonymous source relea
 | `data/` | No | Removed because it only contained a README-only note; dataset layout is documented in the main `README.md`. |
 | `checkpoints/` | No | Removed because it only contained a README-only note; checkpoint naming is documented in `README.md` and `docs/REPRODUCE_PAPER_RESULTS.md`. |
 | `configs/` | No | Removed because it only contained a README-only note; launcher/config usage is documented in `docs/REPRODUCE_PAPER_RESULTS.md`. |
-| `docs/` | Yes | Contains reproducibility, anonymity, code-map, and release-scope documentation. |
+| `docs/` | Yes | Contains reproducibility, data-layout, equation-to-code, anonymity, code-map, and release-scope documentation. |
 | `docs/assets/` | Yes | Contains the small method overview figure used by `README.md`. |
 | `external/GALoss-main/` | Yes | Minimal base-framework dependency required by the training and evaluation scripts. |
 | `framework_core_extract/` | No | Removed because it duplicated top-level code and launchers. Its useful explanation is now in `docs/CODE_MAP.md`. |

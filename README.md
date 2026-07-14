@@ -158,7 +158,7 @@ python test_best_amos_3d_metrics.py \
   --summary_txt /path/to/outputs/amos_shta_full_test.txt
 ```
 
-Both evaluation scripts report mean Dice, HD95, ASD, and per-class metrics.
+For paper reporting, use mean Dice, ASD, and per-class Dice/ASD from the evaluation summaries.
 
 ## Reproduce Paper Results
 
@@ -174,7 +174,7 @@ The paper reports paired baseline/SHTA comparisons on Synapse and AMOS, plus com
 | Hard Token Refinement ablation | `run_ga_cps_3d_v3_hardonly_*` |
 | Semantic Center Alignment ablation | `run_ga_cps_3d_v3_centeronly_*` |
 
-See `docs/REPRODUCE_PAPER_RESULTS.md` for the paper-to-code mapping.
+See `docs/REPRODUCE_PAPER_RESULTS.md` for the paper-to-code mapping and `docs/PAPER_RESULTS.md` for the current paper-result reproduction status.
 
 ## Pretrained Models / Checkpoints
 
@@ -198,6 +198,10 @@ iter_<iter>_dice_<score>_best_AUX.pth  # training branch only
 - SHTA launchers use `--aux_enable 1`.
 - `EPRL_latestv2.py` implements the semantic branch.
 - `docs/README.md` indexes the review-stage documentation.
+- `docs/DATA_PREPARATION.md` describes expected processed dataset layouts and split conventions.
+- `docs/EQUATION_TO_CODE.md` maps paper notation to implementation variables.
+- `docs/PAPER_RESULTS.md` documents which paper rows are command-reproducible in this source release.
+- `docs/ANONYMOUS_SYNC.md` records how the anonymous 4open package should be refreshed.
 - `docs/CODE_MAP.md` maps paper components to executable source files.
 - `docs/ANONYMITY_CHECKLIST.md` lists review-stage anonymity checks.
 - `docs/ANONYMOUS_RELEASE_STRUCTURE.md` lists the anonymous release structure, excluded artifacts, and external execution flow.
