@@ -138,3 +138,16 @@ iter_<iter>_dice_<score>_best_AUX.pth
 ```
 
 Use `best_A.pth` and `best_B.pth` for segmentation evaluation. `best_AUX.pth` belongs to the training-time SHTA branch and is not needed for inference.
+
+## Common Overrides
+
+The shell launchers are the executable configs. Common environment overrides:
+
+```bash
+ROOT_PATH=/path/to/data
+SPLIT_DIR=/path/to/amos_splits
+SAVE_PATH=/path/to/outputs/model
+MAX_ITER=17000
+RUN_EXP=my_run_name
+GALOSS_PYTHON=/path/to/python
+```

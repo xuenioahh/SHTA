@@ -31,12 +31,8 @@ At inference time, the SHTA branch is removed. Evaluation uses only the baseline
 ├── test_best_amos_3d_metrics.py      # AMOS evaluation
 ├── run_ga_cps_3d_*.sh                # baseline, full, and ablation launchers
 ├── check_setup.py                    # local data/path checker
-├── configs/                          # launcher-based config notes
-├── data/                             # dataset layout notes only
-├── checkpoints/                      # checkpoint notes only
 ├── docs/                             # reproducibility and anonymity notes
-├── external/GALoss-main/             # minimal base-framework dependency
-└── framework_core_extract/           # compact paper-to-code reading copy
+└── external/GALoss-main/             # minimal base-framework dependency
 ```
 
 ## Environment
@@ -201,8 +197,8 @@ iter_<iter>_dice_<score>_best_AUX.pth  # training branch only
 - Baseline launchers use `--aux_enable 0`.
 - SHTA launchers use `--aux_enable 1`.
 - `EPRL_latestv2.py` implements the semantic branch.
-- `framework_core_extract/notes/FRAMEWORK_BREAKDOWN.md` gives a compact mapping from the paper components to released code.
 - `docs/README.md` indexes the review-stage documentation.
+- `docs/CODE_MAP.md` maps paper components to executable source files.
 - `docs/ANONYMITY_CHECKLIST.md` lists review-stage anonymity checks.
 - `docs/ANONYMOUS_RELEASE_STRUCTURE.md` lists the anonymous release structure, excluded artifacts, and external execution flow.
 

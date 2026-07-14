@@ -38,7 +38,6 @@ train_AMOS_CPS_V3_3D.py
 test_best_3d_metrics.py
 test_best_amos_3d_metrics.py
 external/GALoss-main/
-framework_core_extract/
 ```
 
 Purpose:
@@ -47,7 +46,6 @@ Purpose:
 - `train_*`: dataset-specific training entry points.
 - `test_*`: dataset-specific evaluation entry points.
 - `external/GALoss-main/`: minimal base-framework code needed by the released entry points.
-- `framework_core_extract/`: compact paper-to-code reading copy for reviewers.
 
 ## Launchers
 
@@ -78,13 +76,11 @@ docs/README.md
 docs/ANONYMOUS_RELEASE_STRUCTURE.md
 docs/ANONYMITY_CHECKLIST.md
 docs/REPRODUCE_PAPER_RESULTS.md
+docs/CODE_MAP.md
+docs/RELEASE_CONTENT_AUDIT.md
 docs/assets/shta_overview.png
 docs/assets/shta_overview.pdf
 AMOS_QUICKSTART.md
-configs/README.md
-data/README.md
-checkpoints/README.md
-framework_core_extract/README.md
 ```
 
 Purpose:
@@ -93,9 +89,9 @@ Purpose:
 - `ANONYMOUS_RELEASE_STRUCTURE.md`: release structure and scope.
 - `ANONYMITY_CHECKLIST.md`: review-stage anonymity checks.
 - `REPRODUCE_PAPER_RESULTS.md`: paper setting to code mapping.
+- `CODE_MAP.md`: paper component to executable source mapping.
+- `RELEASE_CONTENT_AUDIT.md`: keep/remove rationale for top-level items.
 - `docs/assets/`: paper-level method overview only.
-- `data/README.md`: expected dataset layout without distributing data.
-- `checkpoints/README.md`: expected checkpoint naming without distributing weights.
 
 ## External Execution Flow
 
