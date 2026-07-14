@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: "SHTA: Semantic Hard Token Correction and Center Alignment for Semi-Supervised Medical Image Segmentation"
+message: "If you use this repository, please cite the accompanying paper."
+type: software
+authors:
+  - name: "Anonymous Authors"
+repository-code: "https://anonymous.4open.science/r/release_SHTA-42D5/"
+abstract: "SHTA is a training-time semantic branch for semi-supervised 3D medical image segmentation. It performs Semantic Assignment, Hard Token Refinement, and Semantic Center Alignment to correct hard-region semantic representations without adding inference-time overhead."
+keywords:
+  - semi-supervised learning
+  - medical image segmentation
+  - semantic representation learning
+  - hard-token correction
+  - center alignment
+license: MIT
+version: "0.1.0"
+date-released: "2026-07-14"
+preferred-citation:
+  type: conference-paper
+  title: "SHTA: Semantic Hard Token Correction and Center Alignment for Semi-Supervised Medical Image Segmentation"
+  authors:
+    - name: "Anonymous Authors"
+  conference:
+    name: "BIBM"
+  year: 2026
+  url: "https://anonymous.4open.science/r/release_SHTA-42D5/"

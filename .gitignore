@@ -15,3 +15,7 @@ runs/
 *.jpg
 *.jpeg
 *.pdf
+!docs/
+!docs/assets/
+!docs/assets/shta_overview.png
+!docs/assets/shta_overview.pdf
