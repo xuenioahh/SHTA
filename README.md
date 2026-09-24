@@ -1,232 +1,110 @@
 # SHTA
 
-**SHTA: Semantic Hard Token Correction and Center Alignment for Semi-Supervised Medical Image Segmentation**
+**SHTA: Semantic Hard Token Correction and Center Alignment for Semi-Supervised Medical Image Segmentation**<br>
+Accepted at IEEE BIBM 2026 · [Paper (arXiv)](https://arxiv.org/abs/2607.07019)
 
-**Accepted at IEEE International Conference on Bioinformatics and Biomedicine (BIBM) 2026.**
+Zhuoru Zhang, Yiheng Zhong, Zimu Zhang, and Xiaofeng Liu · Xi'an Jiaotong-Liverpool University and Yale University
 
-Zhuoru Zhang, Yiheng Zhong, Zimu Zhang, and Xiaofeng Liu<br>
-Xi'an Jiaotong-Liverpool University · Yale University
-
-SHTA is a lightweight training-time semantic branch for semi-supervised 3D medical image segmentation. It corrects post-selection semantic ambiguity in hard regions through Semantic Assignment, Hard Token Refinement, and Semantic Center Alignment, while preserving the original segmentation inference path.
+SHTA adds a training-only semantic branch to CPS: **Semantic Assignment → Hard Token Refinement → Semantic Center Alignment**. It targets semantic ambiguity among selected hard tokens; the inference path remains the baseline segmentation network.
 
 ![SHTA overview](docs/assets/shta_overview.png)
 
-This is the public source-code release accompanying the accepted paper. Datasets, pretrained checkpoints, training logs, predictions, and large intermediate outputs are not included. Please obtain Synapse and AMOS from their official sources.
+## Reproduce
 
-## Overview
+The commands below reproduce the paper's Synapse 20%-labeled and AMOS 5%-labeled settings. Run them from the repository root on a Linux machine with a compatible NVIDIA/PyTorch environment.
 
-Existing SSL methods often improve which pseudo labels, samples, or hard regions should supervise training. SHTA focuses on what happens after hard evidence has been selected: selected hard tokens may still have unstable token-to-class assignments and weak class-level semantic structure.
+### 1. Install
 
-The released implementation contains the three paper components:
-
-- `Semantic Assignment`: maps decoder features into token embeddings and organizes them with learnable class proxies.
-- `Hard Token Refinement`: selects reliable foreground hard tokens and corrects their proxy assignments with GT-derived dominant token classes.
-- `Semantic Center Alignment`: aggregates corrected hard tokens into class centers and aligns them with GT-derived semantic references.
-
-At inference time, the SHTA branch is removed. Evaluation uses only the baseline segmentation checkpoints.
-
-## Repository Layout
-
-```text
-.
-├── EPRL_latestv2.py                  # SHTA semantic branch
-├── train_Synapse_CPS_V3_3D.py        # Synapse training entry point
-├── train_AMOS_CPS_V3_3D.py           # AMOS training entry point
-├── test_best_3d_metrics.py           # Synapse evaluation
-├── test_best_amos_3d_metrics.py      # AMOS evaluation
-├── run_ga_cps_3d_*.sh                # baseline, full, and ablation launchers
-├── check_setup.py                    # local data/path checker
-├── docs/                             # reproducibility and release notes
-└── external/GALoss-main/             # minimal base-framework dependency
-```
-
-## Environment
-
-Create an environment and install dependencies:
+Use Python 3.10 and install the pinned dependencies:
 
 ```bash
-conda create -n shta python=3.10
+conda create -n shta python=3.10 -y
 conda activate shta
 pip install -r requirements.txt
 ```
 
-The launchers use the vendored base-framework dependency by default:
+The requirements pin PyTorch 2.2 and torchvision 0.17. If your platform needs a CUDA-specific wheel, install the matching build from the official PyTorch selector before running the commands below.
+
+The CPS base framework required by the launchers is included under `external/GALoss-main/`.
+
+### 2. Prepare data
+
+Download the datasets from the [Synapse/BTCV challenge](https://www.synapse.org/Synapse:syn3193805/wiki/) and [AMOS22](https://amos22.grand-challenge.org/). **This repository does not include raw-data download or raw-to-training-format conversion scripts.** Supply data already in these formats:
+
+- **Synapse:** `0001.h5` … `0010.h5` and `0021.h5` … `0040.h5`, each containing `image` and `label` arrays. The 20%-labeled split is fixed in the trainer: labeled cases `0002, 0023, 0034, 0039`; validation cases `0006, 0025, 0026, 0040`; the remaining listed cases are training-unlabeled. Evaluation uses `0004, 0007, 0010, 0033, 0035, 0036`.
+- **AMOS:** paired files named `amos_XXXX_image.npy` and `amos_XXXX_label.npy`, plus split files `labeled_5p.txt`, `unlabeled_5p.txt`, `eval.txt`, and `test.txt`. The trainer's `LABELNUM=10` selects the 5% split. Split-file entries must match the `XXXX` filenames.
+
+Run only the check for the dataset you intend to use; it checks required files and the included base framework:
 
 ```bash
-export GA_ROOT="$(pwd)/external/GALoss-main"
+python check_setup.py --dataset synapse --synapse_root /data/Synapse
+python check_setup.py --dataset amos --amos_root /data/AMOS --amos_split_dir /data/amos_splits
 ```
 
-## Data Preparation
+### 3. Train baseline and SHTA
 
-Synapse expects one HDF5 file per case:
-
-```text
-/path/to/Synapse/0001.h5
-/path/to/Synapse/0002.h5
-...
-/path/to/Synapse/0040.h5
-```
-
-Each `.h5` file must contain:
-
-```text
-image
-label
-```
-
-AMOS expects paired NumPy arrays and split files:
-
-```text
-/path/to/AMOS/amos_xxxx_image.npy
-/path/to/AMOS/amos_xxxx_label.npy
-/path/to/amos_splits/labeled_5p.txt
-/path/to/amos_splits/unlabeled_5p.txt
-/path/to/amos_splits/eval.txt
-/path/to/amos_splits/test.txt
-```
-
-Validate local paths before training:
+Each launcher defaults to 17,000 iterations, seed 1337, and writes to `./model`. Override data/output paths with environment variables:
 
 ```bash
-python check_setup.py \
-  --ga_root external/GALoss-main \
-  --synapse_root /path/to/Synapse \
-  --amos_root /path/to/AMOS \
-  --amos_split_dir /path/to/amos_splits
+ROOT_PATH=/data/Synapse SAVE_PATH=./outputs bash run_ga_cps_3d_baseline_syn20.sh
+ROOT_PATH=/data/Synapse SAVE_PATH=./outputs bash run_ga_cps_3d_v3_full_syn20.sh
+
+ROOT_PATH=/data/AMOS SPLIT_DIR=/data/amos_splits SAVE_PATH=./outputs \
+  bash run_ga_cps_3d_baseline_amos.sh
+ROOT_PATH=/data/AMOS SPLIT_DIR=/data/amos_splits SAVE_PATH=./outputs \
+  bash run_ga_cps_3d_v3_full_amos.sh
 ```
 
-## Training
+The six component-ablation launchers are `run_ga_cps_3d_v3_{proxyonly,hardonly,centeronly}_{clean_syn20,amos}.sh`; run them with the same dataset path variables to reproduce the corresponding ablations. `RUN_EXP`, `MAX_ITER`, and `GALOSS_PYTHON` can also be overridden.
 
-Synapse 20% labeled setting:
+### 4. Evaluate checkpoints
 
-```bash
-ROOT_PATH=/path/to/Synapse \
-bash run_ga_cps_3d_baseline_syn20.sh
-
-ROOT_PATH=/path/to/Synapse \
-bash run_ga_cps_3d_v3_full_syn20.sh
-```
-
-AMOS 5% labeled setting:
-
-```bash
-ROOT_PATH=/path/to/AMOS \
-SPLIT_DIR=/path/to/amos_splits \
-LABELNUM=10 \
-bash run_ga_cps_3d_baseline_amos.sh
-
-ROOT_PATH=/path/to/AMOS \
-SPLIT_DIR=/path/to/amos_splits \
-LABELNUM=10 \
-bash run_ga_cps_3d_v3_full_amos.sh
-```
-
-Common overrides:
-
-```bash
-MAX_ITER=17000
-SAVE_PATH=/path/to/outputs/model
-RUN_EXP=my_shta_run
-GALOSS_PYTHON=/path/to/python
-```
-
-## Evaluation
-
-Training writes checkpoints to:
+Training saves `best_A` and `best_B` in the run directory below; both are evaluated, and the SHTA auxiliary checkpoint is not used at inference.
 
 ```text
 <SAVE_PATH>/<DATASET>_<RUN_EXP>_GA_<labelnum>labeled_seed_<seed>/
 ```
 
-Evaluate Synapse:
+For example, evaluate the full SHTA Synapse run above; this selects the generated best checkpoints automatically:
 
 ```bash
-python test_best_3d_metrics.py \
-  --ga_root external/GALoss-main \
-  --root_path /path/to/Synapse \
-  --run_dir /path/to/outputs/model/synapse_shta_full \
-  --ckpt_a /path/to/outputs/model/synapse_shta_full/iter_xxxxx_dice_xxxx_best_A.pth \
-  --ckpt_b /path/to/outputs/model/synapse_shta_full/iter_xxxxx_dice_xxxx_best_B.pth \
-  --summary_txt /path/to/outputs/synapse_shta_full_test.txt
+RUN=./outputs/Synapse_CPS_syn20_v3full_3d_GA_4labeled_seed_1337
+CKPT_A=$(find "$RUN" -maxdepth 1 -name '*_best_A.pth' -print -quit)
+CKPT_B=$(find "$RUN" -maxdepth 1 -name '*_best_B.pth' -print -quit)
+python test_best_3d_metrics.py --ga_root external/GALoss-main \
+  --root_path /data/Synapse --run_dir "$RUN" \
+  --ckpt_a "$CKPT_A" --ckpt_b "$CKPT_B" \
+  --summary_txt ./outputs/synapse_test.txt
 ```
 
-Evaluate AMOS:
+For AMOS, use the same pattern with `RUN=./outputs/AMOS_CPS_amos_v3full_3d_GA_10labeled_seed_1337` and run:
 
 ```bash
-python test_best_amos_3d_metrics.py \
-  --ga_root external/GALoss-main \
-  --root_path /path/to/AMOS \
-  --split_dir /path/to/amos_splits \
-  --run_dir /path/to/outputs/model/amos_shta_full \
-  --ckpt_a /path/to/outputs/model/amos_shta_full/iter_xxxxx_dice_xxxx_best_A.pth \
-  --ckpt_b /path/to/outputs/model/amos_shta_full/iter_xxxxx_dice_xxxx_best_B.pth \
-  --summary_txt /path/to/outputs/amos_shta_full_test.txt
+CKPT_A=$(find "$RUN" -maxdepth 1 -name '*_best_A.pth' -print -quit)
+CKPT_B=$(find "$RUN" -maxdepth 1 -name '*_best_B.pth' -print -quit)
+python test_best_amos_3d_metrics.py --ga_root external/GALoss-main \
+  --root_path /data/AMOS --split_dir /data/amos_splits --run_dir "$RUN" \
+  --ckpt_a "$CKPT_A" --ckpt_b "$CKPT_B" \
+  --summary_txt ./outputs/amos_test.txt
 ```
 
-For paper reporting, use mean Dice, ASD, and per-class Dice/ASD from the evaluation summaries.
+Evaluate the baseline by pointing `RUN` to its run directory instead. Report mean and per-class Dice and ASD from the generated summaries.
 
-## Reproduce Paper Results
+## Scope and implementation
 
-The paper reports paired baseline/SHTA comparisons on Synapse and AMOS, plus component ablations.
+Datasets, trained checkpoints, logs, predictions, and raw-data conversion utilities are not distributed here. Results can vary with hardware, software, and data preprocessing; compare against the paper's protocol and report your actual run settings. The main implementation is `EPRL_latestv2.py`; training entry points are `train_Synapse_CPS_V3_3D.py` and `train_AMOS_CPS_V3_3D.py`; evaluation entry points are the two `test_best_*_metrics.py` files. `check_setup.py` checks local prerequisites.
 
-| Paper setting | Launcher |
-| --- | --- |
-| Synapse 20% baseline | `run_ga_cps_3d_baseline_syn20.sh` |
-| Synapse 20% SHTA full | `run_ga_cps_3d_v3_full_syn20.sh` |
-| AMOS 5% baseline | `run_ga_cps_3d_baseline_amos.sh` |
-| AMOS 5% SHTA full | `run_ga_cps_3d_v3_full_amos.sh` |
-| Semantic Assignment ablation | `run_ga_cps_3d_v3_proxyonly_*` |
-| Hard Token Refinement ablation | `run_ga_cps_3d_v3_hardonly_*` |
-| Semantic Center Alignment ablation | `run_ga_cps_3d_v3_centeronly_*` |
-
-See `docs/REPRODUCE_PAPER_RESULTS.md` for the paper-to-code mapping and `docs/PAPER_RESULTS.md` for the current paper-result reproduction status.
-
-## Pretrained Models / Checkpoints
-
-Pretrained checkpoints are not included in this source release.
-
-Expected trained checkpoints:
-
-```text
-iter_<iter>_dice_<score>_best_A.pth
-iter_<iter>_dice_<score>_best_B.pth
-iter_<iter>_dice_<score>_best_AUX.pth  # training branch only
-```
-
-`best_A.pth` and `best_B.pth` are used for evaluation. `best_AUX.pth` belongs to the training-time SHTA branch and is not needed for inference.
-
-## Notes
-
-- The method name in this repository is **SHTA**.
-- The paper was accepted at IEEE BIBM 2026.
-- Preprint: https://arxiv.org/abs/2607.07019
-- Public source repository: https://github.com/xuenioahh/SHTA
-- Baseline launchers use `--aux_enable 0`.
-- SHTA launchers use `--aux_enable 1`.
-- `EPRL_latestv2.py` implements the semantic branch.
-- `docs/README.md` indexes the reproducibility documentation. It also identifies the retained review-stage anonymity notes as historical and superseded.
-- `docs/DATA_PREPARATION.md` describes expected processed dataset layouts and split conventions.
-- `docs/EQUATION_TO_CODE.md` maps paper notation to implementation variables.
-- `docs/PAPER_RESULTS.md` documents which paper rows are command-reproducible in this source release.
-- `docs/ANONYMOUS_SYNC.md` is a historical note for the review-stage 4open package; it is not the public release workflow.
-- `docs/CODE_MAP.md` maps paper components to executable source files.
-- `docs/ANONYMITY_CHECKLIST.md` and `docs/ANONYMOUS_RELEASE_STRUCTURE.md` are retained as review-history documents and are superseded by this public README.
-
-## Citation
+## Citation and license
 
 ```bibtex
 @inproceedings{zhang2026shta,
-  title        = {SHTA: Semantic Hard Token Correction and Center Alignment for Semi-Supervised Medical Image Segmentation},
-  author       = {Zhang, Zhuoru and Zhong, Yiheng and Zhang, Zimu and Liu, Xiaofeng},
-  booktitle    = {2026 IEEE International Conference on Bioinformatics and Biomedicine (BIBM)},
-  year         = {2026},
-  note         = {Accepted},
-  url          = {https://arxiv.org/abs/2607.07019}
+  title     = {SHTA: Semantic Hard Token Correction and Center Alignment for Semi-Supervised Medical Image Segmentation},
+  author    = {Zhang, Zhuoru and Zhong, Yiheng and Zhang, Zimu and Liu, Xiaofeng},
+  booktitle = {2026 IEEE International Conference on Bioinformatics and Biomedicine (BIBM)},
+  year      = {2026},
+  note      = {Accepted},
+  url       = {https://arxiv.org/abs/2607.07019}
 }
 ```
 
-GitHub-compatible citation metadata is provided in `CITATION.cff`.
-
-## License
-
-This repository is released under the MIT License. See `LICENSE`.
+Citation metadata: `CITATION.cff`. License: MIT (`LICENSE`).
