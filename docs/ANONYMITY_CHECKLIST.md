@@ -1,4 +1,6 @@
-# Anonymity Checklist
+# Archived Anonymity Checklist
+
+This checklist applied to the anonymous review release. The paper is now accepted at IEEE BIBM 2026 and this file is retained only as review history; it does not describe the current public repository state.
 
 Use this checklist before distributing the anonymous review link.
 
@@ -26,9 +28,6 @@ Expected result:
 - the `rg` command reports only intentional anonymous metadata or checklist text.
 - `git status --short` is empty before upload.
 
-## After Acceptance
+## Post-Acceptance Update
 
-- author names in `CITATION.cff`
-- final paper citation
-- public repository URL
-- checkpoint download links, if released
+The public author names, BIBM 2026 acceptance status, citation, and GitHub repository URL are now published in `README.md` and `CITATION.cff`. Checkpoints remain excluded from this source release.

@@ -1,6 +1,6 @@
 # Paper Result Reproduction
 
-This release provides source code and commands for the released Synapse and AMOS settings. It does not include pretrained checkpoints, training logs, or final numeric paper tables.
+This public release provides source code and commands for the Synapse and AMOS settings reported in the BIBM 2026 accepted paper. It does not include pretrained checkpoints, training logs, or archived numeric result files; use the paper and its figures/tables for the reported values.
 
 ## Reported Metrics
 
@@ -27,6 +27,6 @@ The evaluation scripts may retain additional compatibility fields in their raw s
 | Hard Token Refinement ablation | `run_ga_cps_3d_v3_hardonly_*` | dataset-specific evaluation script | Not included |
 | Semantic Center Alignment ablation | `run_ga_cps_3d_v3_centeronly_*` | dataset-specific evaluation script | Not included |
 
-## After Review
+## Release Scope
 
-For a full public reproducibility release, add expected Dice/ASD values, tolerance ranges, checkpoint links, and logs for each paper row.
+The accepted-paper source release does not redistribute datasets, checkpoints, or training logs. Users can rerun the listed commands with the official datasets. Checkpoint links and archived logs are not currently provided.

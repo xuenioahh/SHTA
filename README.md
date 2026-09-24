@@ -2,11 +2,16 @@
 
 **SHTA: Semantic Hard Token Correction and Center Alignment for Semi-Supervised Medical Image Segmentation**
 
+**Accepted at IEEE International Conference on Bioinformatics and Biomedicine (BIBM) 2026.**
+
+Zhuoru Zhang, Yiheng Zhong, Zimu Zhang, and Xiaofeng Liu<br>
+Xi'an Jiaotong-Liverpool University · Yale University
+
 SHTA is a lightweight training-time semantic branch for semi-supervised 3D medical image segmentation. It corrects post-selection semantic ambiguity in hard regions through Semantic Assignment, Hard Token Refinement, and Semantic Center Alignment, while preserving the original segmentation inference path.
 
 ![SHTA overview](docs/assets/shta_overview.png)
 
-This repository is an anonymous, source-only release. Datasets, checkpoints, training logs, predictions, and large intermediate outputs are not included.
+This is the public source-code release accompanying the accepted paper. Datasets, pretrained checkpoints, training logs, predictions, and large intermediate outputs are not included. Please obtain Synapse and AMOS from their official sources.
 
 ## Overview
 
@@ -31,7 +36,7 @@ At inference time, the SHTA branch is removed. Evaluation uses only the baseline
 ├── test_best_amos_3d_metrics.py      # AMOS evaluation
 ├── run_ga_cps_3d_*.sh                # baseline, full, and ablation launchers
 ├── check_setup.py                    # local data/path checker
-├── docs/                             # reproducibility and anonymity notes
+├── docs/                             # reproducibility and release notes
 └── external/GALoss-main/             # minimal base-framework dependency
 ```
 
@@ -178,7 +183,7 @@ See `docs/REPRODUCE_PAPER_RESULTS.md` for the paper-to-code mapping and `docs/PA
 
 ## Pretrained Models / Checkpoints
 
-Pretrained checkpoints are not included in this anonymous source release.
+Pretrained checkpoints are not included in this source release.
 
 Expected trained checkpoints:
 
@@ -193,28 +198,30 @@ iter_<iter>_dice_<score>_best_AUX.pth  # training branch only
 ## Notes
 
 - The method name in this repository is **SHTA**.
-- The anonymous review link is `https://anonymous.4open.science/r/release_SHTA-42D5/`.
+- The paper was accepted at IEEE BIBM 2026.
+- Preprint: https://arxiv.org/abs/2607.07019
+- Public source repository: https://github.com/xuenioahh/SHTA
 - Baseline launchers use `--aux_enable 0`.
 - SHTA launchers use `--aux_enable 1`.
 - `EPRL_latestv2.py` implements the semantic branch.
-- `docs/README.md` indexes the review-stage documentation.
+- `docs/README.md` indexes the reproducibility documentation. It also identifies the retained review-stage anonymity notes as historical and superseded.
 - `docs/DATA_PREPARATION.md` describes expected processed dataset layouts and split conventions.
 - `docs/EQUATION_TO_CODE.md` maps paper notation to implementation variables.
 - `docs/PAPER_RESULTS.md` documents which paper rows are command-reproducible in this source release.
-- `docs/ANONYMOUS_SYNC.md` records how the anonymous 4open package should be refreshed.
+- `docs/ANONYMOUS_SYNC.md` is a historical note for the review-stage 4open package; it is not the public release workflow.
 - `docs/CODE_MAP.md` maps paper components to executable source files.
-- `docs/ANONYMITY_CHECKLIST.md` lists review-stage anonymity checks.
-- `docs/ANONYMOUS_RELEASE_STRUCTURE.md` lists the anonymous release structure, excluded artifacts, and external execution flow.
+- `docs/ANONYMITY_CHECKLIST.md` and `docs/ANONYMOUS_RELEASE_STRUCTURE.md` are retained as review-history documents and are superseded by this public README.
 
 ## Citation
 
 ```bibtex
-@misc{shta2026,
+@inproceedings{zhang2026shta,
   title        = {SHTA: Semantic Hard Token Correction and Center Alignment for Semi-Supervised Medical Image Segmentation},
-  author       = {Anonymous Authors},
+  author       = {Zhang, Zhuoru and Zhong, Yiheng and Zhang, Zimu and Liu, Xiaofeng},
+  booktitle    = {2026 IEEE International Conference on Bioinformatics and Biomedicine (BIBM)},
   year         = {2026},
-  note         = {Anonymous code release},
-  url          = {https://anonymous.4open.science/r/release_SHTA-42D5/}
+  note         = {Accepted},
+  url          = {https://arxiv.org/abs/2607.07019}
 }
 ```
 

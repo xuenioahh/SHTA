@@ -1,6 +1,6 @@
 # Data Preparation
 
-This anonymous release does not redistribute Synapse or AMOS data. Users should obtain the datasets from their official sources and convert them to the processed layouts expected by the released loaders.
+This public source release does not redistribute Synapse or AMOS data. Users should obtain the datasets from their official sources and convert them to the processed layouts expected by the released loaders.
 
 ## Synapse
 
@@ -69,4 +69,4 @@ python check_setup.py \
 
 ## Boundary
 
-Raw NIfTI conversion scripts are not included in this source-only anonymous release. If releasing a full public reproducibility package after review, add scripts that specify orientation, spacing, resizing, cropping, intensity normalization, and label remapping.
+Raw NIfTI conversion scripts are not included in this source-only release. The paper reports the processed-data settings; this repository documents the layouts expected by its loaders.
